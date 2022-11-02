@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/components/todo_item.dart';
+import 'package:flutter_todo_app/components/todo_list.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+
+  List<String> todos = ['TODO 1', 'TODO 2', 'TODO 3'];
 
   @override
   Widget build(BuildContext context) {
@@ -10,15 +11,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Machida Todo App'),
       ),
-      body: Container(
-        child: ListView(
-          children: [
-            TodoItem(title: 'TODO 1'),
-            TodoItem(title: 'TODO 2'),
-            TodoItem(title: 'TODO 3'),
-          ],
-        ),
-      ),
+      body: TodoList(todos: todos),
       floatingActionButton:  FloatingActionButton.extended(
         onPressed: () { return; },
         icon: const Icon(Icons.add),
