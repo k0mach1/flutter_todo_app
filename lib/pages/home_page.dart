@@ -9,6 +9,11 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Machida Todo App'),
       ),
+      floatingActionButton:  FloatingActionButton.extended(
+        onPressed: () { return; },
+        icon: const Icon(Icons.add),
+        label: Text('Add Todo'),
+      ),
     );
   }
 }
