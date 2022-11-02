@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/components/todo_item.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,18 +13,9 @@ class HomePage extends StatelessWidget {
       body: Container(
         child: ListView(
           children: [
-            ListTile(
-              leading: const Icon(Icons.check_box_outline_blank),
-              title: Text('Todo 1'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.check_box_outline_blank),
-              title: Text('Todo 2'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.check_box_outline_blank),
-              title: Text('Todo 3'),
-            )
+            TodoItem(title: 'TODO 1'),
+            TodoItem(title: 'TODO 2'),
+            TodoItem(title: 'TODO 3'),
           ],
         ),
       ),
