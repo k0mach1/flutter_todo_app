@@ -30,13 +30,24 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  void removeTodo(int index) {
+    _todos.removeAt(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Machida Todo App'),
       ),
-      body: TodoList(todos: _todos),
+      body: TodoList(
+        todos: _todos,
+        onTodoItemDismissed: (int index) {
+          setState(() {
+            removeTodo(index);
+          });
+        },
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: showAddTodoModal,
         icon: const Icon(Icons.add),
