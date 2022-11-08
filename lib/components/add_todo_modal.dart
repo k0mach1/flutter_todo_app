@@ -14,10 +14,17 @@ class AddTodoModal extends StatefulWidget {
 class AddTodoModalState extends State<AddTodoModal> {
 
   final Todo _todo = Todo.createEmpty();
+  bool _isDescriptionEditable = false;
 
   void handleTitle(String title) {
     setState(() {
       _todo.title = title;
+    });
+  }
+
+  void handleDescription(String description) {
+    setState(() {
+      _todo.description = description;
     });
   }
 
@@ -42,6 +49,19 @@ class AddTodoModalState extends State<AddTodoModal> {
               visible: isTodoDeadlineEdited(),
               child: Text('Deadline: ${_todo.getDeadlineString()}')
           ),
+          Visibility(
+              visible: _isDescriptionEditable,
+              child: TextFormField(
+                initialValue: _todo.description,
+                enabled: true,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  hintText: 'memo',
+                ),
+                onChanged: handleDescription,
+              ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -60,6 +80,14 @@ class AddTodoModalState extends State<AddTodoModal> {
                   }
                 },
                 icon: const Icon(Icons.calendar_month),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isDescriptionEditable = !_isDescriptionEditable;
+                  });
+                },
+                icon: const Icon(Icons.edit_note),
               )
             ],
           ),
