@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_todo_app/models/todo.dart';
 
 class AddTodoModal extends StatefulWidget {
   const AddTodoModal({super.key});
@@ -12,11 +13,11 @@ class AddTodoModal extends StatefulWidget {
 
 class AddTodoModalState extends State<AddTodoModal> {
 
-  String _todo = '';
+  final Todo _todo = Todo.createEmpty();
 
-  void handleText(String todo) {
+  void handleTitle(String title) {
     setState(() {
-      _todo = todo;
+      _todo.title = title;
     });
   }
 
@@ -35,7 +36,32 @@ class AddTodoModalState extends State<AddTodoModal> {
               icon: Icon(Icons.check),
               hintText: 'Input new TODO',
             ),
-            onChanged: handleText,
+            onChanged: handleTitle,
+          ),
+          Visibility(
+              visible: isTodoDeadlineEdited(),
+              child: Text('Deadline: ${_todo.getDeadlineString()}')
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  DateTime now = DateTime.now();
+                  final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _todo.deadline,
+                      firstDate: now,
+                      lastDate: DateTime(now.year + 1));
+                  if (pickedDate != null) {
+                    setState(() {
+                      _todo.deadline = pickedDate;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.calendar_month),
+              )
+            ],
           ),
           ElevatedButton(onPressed: () {
             Navigator.pop(context, _todo);
@@ -44,5 +70,8 @@ class AddTodoModalState extends State<AddTodoModal> {
       ),
     );
   }
-  
+
+  bool isTodoDeadlineEdited() {
+    return !(_todo.deadline == Todo.defaultDeadline());
+  }
 }

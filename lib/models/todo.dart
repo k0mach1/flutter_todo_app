@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 enum TodoStatus {
   notYet,
   done
@@ -15,6 +17,24 @@ class Todo {
     required this.status,
     required this.deadline,
     required this.isStared,
-    required this.description
+    this.description
   });
+
+  static Todo createEmpty() {
+    return Todo(
+        title: '',
+        status: TodoStatus.notYet,
+        deadline: defaultDeadline(),
+        isStared: false);
+  }
+
+  static DateTime defaultDeadline() {
+    DateTime now = DateTime.now();
+    return DateTime(now.year, now.month, now.day + 1);
+  }
+
+  String getDeadlineString() {
+    DateFormat format = DateFormat('MM/dd');
+    return format.format(deadline);
+  }
 }
