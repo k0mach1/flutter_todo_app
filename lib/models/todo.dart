@@ -30,6 +30,15 @@ class Todo {
         isStared: false);
   }
 
+  static Todo fromJson(Map<String, dynamic> json) {
+    return Todo(
+      title: json['title'],
+      status: TodoStatus.values.byName(json['status']),
+      deadline: DateTime.parse(json['deadline']),
+      isStared: json['is_stared']
+    );
+  }
+
   static DateTime defaultDeadline() {
     DateTime now = DateTime.now();
     return DateTime(now.year, now.month, now.day + 1);
