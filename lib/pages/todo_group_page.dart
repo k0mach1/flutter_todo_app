@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/components/todo_group_empty_view.dart';
 import 'package:flutter_todo_app/models/todo.dart';
 import 'package:flutter_todo_app/components/add_todo_modal.dart';
 import 'package:flutter_todo_app/components/todo_list.dart';
@@ -46,9 +47,9 @@ class TodoGroupPageState extends State<TodoGroupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Machida Todo App'),
+        title: Text(widget.todoGroup.title),
       ),
-      body: TodoList(
+      body: widget.todoGroup.isEmpty() ? const TodoGroupEmptyView() : TodoList(
         todos: widget.todoGroup.todos,
         onTodoItemDismissed: (int index) {
           setState(() {
