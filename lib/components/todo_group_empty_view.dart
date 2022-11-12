@@ -11,7 +11,7 @@ class TodoGroupEmptyView extends StatelessWidget {
           Image.asset('images/todo_group_empty.png'),
           const Text('This Todo Group is Empty'),
         ],
-      ),
+      ),  
     );
   }
 
