@@ -16,6 +16,10 @@ class TodoGroup {
     todos.removeAt(index);
   }
 
+  bool isEmpty() {
+    return todos.isEmpty;
+  }
+
   static TodoGroup createSampleInstance(Icon icon, String title) {
     return TodoGroup(
         icon: icon,
