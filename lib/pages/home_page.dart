@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/models/todo.dart';
-import 'package:flutter_todo_app/components/add_todo_modal.dart';
-import 'package:flutter_todo_app/components/todo_list.dart';
+import 'package:flutter_todo_app/models/todo_group.dart';
+import 'package:flutter_todo_app/pages/todo_group_page.dart';
+
+import '../components/todo_group_list.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,48 +13,11 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
 
-  final List<Todo> _todos = [
-    Todo(
-        title: 'Todo 1',
-        status: TodoStatus.notYet,
-        deadline: DateTime.now(),
-        isStared: true),
-    Todo(
-        title: 'Todo 2',
-        status: TodoStatus.notYet,
-        deadline: DateTime.now(),
-        isStared: true),
-    Todo(
-        title: 'Todo 3',
-        status: TodoStatus.notYet,
-        deadline: DateTime.now(),
-        isStared: true),
+  final List<TodoGroup> _todoGroups = [
+    TodoGroup.createSampleInstance(Icon(Icons.sunny), 'Today'),
+    TodoGroup.createSampleInstance(Icon(Icons.star), 'Important'),
+    TodoGroup.createSampleInstance(Icon(Icons.calendar_month), 'Scheduled')
   ];
-
-  void showAddTodoModal() async {
-    var result = await showDialog(
-      context: context,
-      builder: (_) { return AddTodoModal(); },
-    );
-    setState(() {
-      addTodo(result);
-    });
-  }
-
-  void addTodo(Object? result) {
-    if (result == null) { return; }
-
-    try {
-      Todo todo = result as Todo;
-      _todos.add(todo);
-    } catch(e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  void removeTodo(int index) {
-    _todos.removeAt(index);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +25,16 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Machida Todo App'),
       ),
-      body: TodoList(
-        todos: _todos,
-        onTodoItemDismissed: (int index) {
-          setState(() {
-            removeTodo(index);
-          });
+      body: TodoGroupList(
+        todoGroups: _todoGroups,
+        onItemTapped: (TodoGroup todoGroup) {
+          Navigator.push(
+            context,
+              MaterialPageRoute(
+                  builder: (context) => TodoGroupPage(todoGroup: todoGroup)
+              )
+          );
         },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: showAddTodoModal,
-        icon: const Icon(Icons.add),
-        label: Text('Add Todo'),
       ),
     );
   }
