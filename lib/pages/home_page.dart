@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/components/add_todo_modal.dart';
-import 'package:flutter_todo_app/components/todo_list.dart';
+import 'package:flutter_todo_app/models/todo_group.dart';
+import 'package:flutter_todo_app/pages/todo_group_page.dart';
+
+import '../components/todo_group_list.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,28 +13,11 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
 
-  List<String> _todos = ['TODO 1', 'TODO 2', 'TODO 3'];
-
-  void showAddTodoModal() async {
-    var result = await showDialog(
-      context: context,
-      builder: (_) { return AddTodoModal(); },
-    );
-    setState(() {
-      addTodo(result);
-    });
-  }
-
-  void addTodo(Object? result) {
-    String todo = (result ?? 'null') as String;
-    if (todo.isNotEmpty) {
-      _todos.add(todo);
-    }
-  }
-
-  void removeTodo(int index) {
-    _todos.removeAt(index);
-  }
+  final List<TodoGroup> _todoGroups = [
+    TodoGroup.createSampleInstance(Icon(Icons.sunny), 'Today'),
+    TodoGroup.createSampleInstance(Icon(Icons.star), 'Important'),
+    TodoGroup.createSampleInstance(Icon(Icons.calendar_month), 'Scheduled')
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +25,16 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Machida Todo App'),
       ),
-      body: TodoList(
-        todos: _todos,
-        onTodoItemDismissed: (int index) {
-          setState(() {
-            removeTodo(index);
-          });
+      body: TodoGroupList(
+        todoGroups: _todoGroups,
+        onItemTapped: (TodoGroup todoGroup) {
+          Navigator.push(
+            context,
+              MaterialPageRoute(
+                  builder: (context) => TodoGroupPage(todoGroup: todoGroup)
+              )
+          );
         },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: showAddTodoModal,
-        icon: const Icon(Icons.add),
-        label: Text('Add Todo'),
       ),
     );
   }

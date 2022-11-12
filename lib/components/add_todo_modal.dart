@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_todo_app/models/todo.dart';
 
 class AddTodoModal extends StatefulWidget {
   const AddTodoModal({super.key});
@@ -12,11 +13,18 @@ class AddTodoModal extends StatefulWidget {
 
 class AddTodoModalState extends State<AddTodoModal> {
 
-  String _todo = '';
+  final Todo _todo = Todo.createEmpty();
+  bool _isDescriptionEditable = false;
 
-  void handleText(String todo) {
+  void handleTitle(String title) {
     setState(() {
-      _todo = todo;
+      _todo.title = title;
+    });
+  }
+
+  void handleDescription(String description) {
+    setState(() {
+      _todo.description = description;
     });
   }
 
@@ -35,7 +43,53 @@ class AddTodoModalState extends State<AddTodoModal> {
               icon: Icon(Icons.check),
               hintText: 'Input new TODO',
             ),
-            onChanged: handleText,
+            onChanged: handleTitle,
+          ),
+          Visibility(
+              visible: isTodoDeadlineEdited(),
+              child: Text('Deadline: ${_todo.getDeadlineString()}')
+          ),
+          Visibility(
+              visible: _isDescriptionEditable,
+              child: TextFormField(
+                initialValue: _todo.description,
+                enabled: true,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  hintText: 'memo',
+                ),
+                onChanged: handleDescription,
+              ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  DateTime now = DateTime.now();
+                  final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _todo.deadline,
+                      firstDate: now,
+                      lastDate: DateTime(now.year + 1));
+                  if (pickedDate != null) {
+                    setState(() {
+                      _todo.deadline = pickedDate;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.calendar_month),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isDescriptionEditable = !_isDescriptionEditable;
+                  });
+                },
+                icon: const Icon(Icons.edit_note),
+              )
+            ],
           ),
           ElevatedButton(onPressed: () {
             Navigator.pop(context, _todo);
@@ -44,5 +98,8 @@ class AddTodoModalState extends State<AddTodoModal> {
       ),
     );
   }
-  
+
+  bool isTodoDeadlineEdited() {
+    return !(_todo.deadline == Todo.defaultDeadline());
+  }
 }
