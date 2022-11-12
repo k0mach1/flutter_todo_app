@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/api/apiclient.dart';
+import 'package:flutter_todo_app/api/repositories/todo_group_repository.dart';
 import 'package:flutter_todo_app/components/todo_group_empty_view.dart';
 import 'package:flutter_todo_app/models/todo.dart';
+import 'package:flutter_todo_app/models/todo_group.dart';
 import 'package:flutter_todo_app/components/add_todo_modal.dart';
 import 'package:flutter_todo_app/components/todo_list.dart';
-import 'package:flutter_todo_app/models/todo_group.dart';
 
 class TodoGroupPage extends StatefulWidget {
   TodoGroup todoGroup;
+  List<Todo> todos = [];
 
   TodoGroupPage({ super.key,  required this.todoGroup });
 
@@ -17,6 +20,8 @@ class TodoGroupPage extends StatefulWidget {
 }
 
 class TodoGroupPageState extends State<TodoGroupPage> {
+  
+  TodoGroupRepository todoGroupRepository = TodoGroupRepositoryImpl(apiClient: ApiClientImpl());
 
   void showAddTodoModal() async {
     var result = await showDialog(
@@ -49,8 +54,8 @@ class TodoGroupPageState extends State<TodoGroupPage> {
       appBar: AppBar(
         title: Text(widget.todoGroup.title),
       ),
-      body: widget.todoGroup.isEmpty() ? const TodoGroupEmptyView() : TodoList(
-        todos: widget.todoGroup.todos,
+      body: widget.todos.isEmpty ? const TodoGroupEmptyView() : TodoList(
+        todos: widget.todos,
         onTodoItemDismissed: (int index) {
           setState(() {
             removeTodo(index);
@@ -63,5 +68,20 @@ class TodoGroupPageState extends State<TodoGroupPage> {
         label: const Text('Add Todo'),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    getTodos();
+
+    super.initState();
+  }
+
+  void getTodos() async {
+    List<Todo> fetchedTodos = await todoGroupRepository.getTodos();
+
+    setState(() {
+      widget.todos = fetchedTodos;
+    });
   }
 }

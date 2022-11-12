@@ -10,7 +10,7 @@ abstract class ApiClient {
 
 class ApiClientImpl implements ApiClient {
 
-  factory ApiClientImpl({ String baseUrl = 'http://10.0.2.2:3030' }) {
+  factory ApiClientImpl({ String baseUrl = '10.0.2.2:8080' }) {
     return _instance ??= ApiClientImpl._internal(baseUrl);
   }
 
