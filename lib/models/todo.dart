@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 enum TodoStatus {
@@ -36,5 +38,18 @@ class Todo {
   String getDeadlineString() {
     DateFormat format = DateFormat('MM/dd');
     return format.format(deadline);
+  }
+
+  Icon getIcon() {
+    switch(status) {
+      case TodoStatus.notYet:
+        return const Icon(Icons.check_box_outline_blank);
+      case TodoStatus.done:
+        return const Icon(Icons.check_box);
+    }
+  }
+
+  void setStatus(TodoStatus status) {
+    this.status = status;
   }
 }

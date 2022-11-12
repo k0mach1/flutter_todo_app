@@ -17,7 +17,7 @@ class TodoList extends StatelessWidget {
       itemBuilder: (context, index) {
         var todo = todos.elementAt(index);
         return TodoItem(
-          title: todo.title,
+          todo: todo,
           onTodoItemDismissed: () {
             onTodoItemDismissed(index);
           },);
